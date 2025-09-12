@@ -1,0 +1,26 @@
+﻿@model ArtEShop.Domain.DTO.RequestDTO
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h3>Request Details</h3>
+
+<div class="container d-flex flex-column justify-content-center align-items-center" style="height: 470px;">
+    <div class="d-flex justify-content-center align-items-center mt-2">
+        <img class="card-img-start mt-3 mx-5" src="/uploads/@Model.ReferenceImage" style="max-width:450px; height:auto; max-height: 450px; width:auto;" alt="Image for product!">
+
+        <div class="d-flex-y align-self-center justify-content-center" style="width:50%;">
+            <h3 class="card-title text-center my-3">@Model.Subject</h3>
+
+            <h6 class="text-center mb-3">Description: @Model.Description</h6>
+            <h6 class="text-center mb-3">Price: @Model.Price EUR</h6>
+            <h6 class="text-center">Artist Notes: @Model.ArtistNotes</h6>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center mt-3">
+        <a class="btn btn-success mx-2" asp-action="Edit" asp-route-id="@Model.RequestId">Edit</a> 
+        <a class="btn btn-info" asp-action="Index">Back to List</a>
+    </div>
+</div>
+

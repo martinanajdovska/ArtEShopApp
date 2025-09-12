@@ -1,0 +1,58 @@
+﻿@model ArtEShop.Domain.DTO.ShoppingCartDTO;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="d-flex align-items-center">
+        <p class="m-0">Total Cart Value: @Model.TotalPrice EUR</p>
+        <a class="btn btn-success mx-2" asp-action="Payment" asp-route-price="@Model.TotalPrice">Purchase entire cart</a>
+    </div>
+
+    @if (Model.ShoppingCartItemsDTO.Count != 0)
+    {
+        @for (int i = 0; i < Model.ShoppingCartItemsDTO.Count; i++)
+        {
+            var item = Model.ShoppingCartItemsDTO[i];
+
+            @if(i%3 == 0)
+            {
+                @:<div class="row">
+            }
+
+            <div class="col-3 m-5 justify-content-center">
+                <div class="card d-flex flex-column justify-content-between" style="width: 20rem; height: 30rem;">
+                    <img class="card-img-top align-self-center mt-4" src="/uploads/@item.ArtPiece.Image" style="max-height: 18rem; width:auto; max-width:15rem; height:auto;" alt="Image for product!">
+                    <div class="d-flex flex-column justify-content-between">
+                        <div class="card-body pt-0">
+                            <h3 class="card-title text-center">@item.ArtPiece.Name</h3>
+                            <h6 class="card-text text-center">Quantity: @item.Quantity,  Price: @item.ArtPiece.Price EUR</h6>
+                            <h6 class="card-text text-center">Total Price: @item.TotalPrice EUR</h6>
+                        </div>
+                        <div class="card-footer d-flex justify-content-evenly">
+                        <a asp-action="Payment" asp-route-id="@item.ArtPiece.Id" asp-route-price="@item.TotalPrice" class="btn btn-success">Purchase item</a>
+                        <a asp-action="DeleteShoppingCartItem" asp-route-id="@item.ArtPiece.Id" class="btn btn-danger">Remove item</a>
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </div>
+
+            @if(i%3 == 2) 
+            {
+                @:</div>    
+            }
+        }
+    } else
+    {
+        <div>
+            <p>Shopping Cart is empty!</p>
+        </div>
+    }
+
+    
+
+</div>

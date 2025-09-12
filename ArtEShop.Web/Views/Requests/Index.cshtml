@@ -1,0 +1,43 @@
+﻿@model List<ArtEShop.Domain.DTO.RequestDTO>
+@using ArtEShop.Domain.IdentityModels
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    @if (!User.IsInRole("Admin"))
+    {
+        <a asp-controller="Requests" asp-action="Create" class="btn btn-success mt-2">Create Request</a>
+    }
+    @if (Model == null)
+{
+    <p>There are no requests</p>
+} else
+{
+
+        @for (int i = 1; i <= Model.Count; i++)
+        {
+            var item = Model[i-1];
+
+            <div class="my-4">
+                <input type="hidden" asp-for="@item.RequestId" class="form-control" />
+                @if(User.IsInRole("Admin"))
+                {
+                    <p>@i. @item.Subject - @item.Description - Answered: @item.IsAnswered</p>
+                } else
+                {
+                    <p>@i. @item.Subject - @item.Description</p>
+                }
+                <div class="card-footer">
+                    <a asp-controller="Requests" asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-info">Details</a>
+                </div>
+            </div>
+
+        }
+
+}
+</div>
+

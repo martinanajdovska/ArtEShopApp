@@ -1,0 +1,28 @@
+﻿@model ArtEShop.Domain.DTO.AddToCartDTO;
+
+<div class="container d-flex justify-content-center align-items-center" style="height:500px;">
+    <form method="post" asp-action="AddArtPieceToCart">
+
+        <input type="hidden" asp-for="ArtPiece.Id" class="form-control" />
+
+        <div class="d-flex justify-content-center mt-2 align-items-center" style="width: auto; height: 500px;">
+            <img class="card-img-start mt-3 mx-5" src="/uploads/@Model.ArtPiece.Image" style="max-width:500px; height:auto; max-height: 500px; width:auto;" alt="Image for product!">
+
+            <div class="mx-5 d-flex-y align-self-center justify-content-center" style="width:50%;">
+                <h3 class="card-title text-center my-3">@Model.ArtPiece.Name</h3>
+
+                <h6 class="text-center mb-3">Price: @Model.ArtPiece.Price ДЕН</h6>
+                <div class="d-flex justify-content-center align-items-center" style="width:150px;">
+                    <label asp-for="Quantity" class="control-label mx-2"></label>
+                    <input required asp-for="Quantity" class="form-control" type="number" min="1" value="1" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+                <div class="row mt-4" style="width:150px;">
+                    <button type="submit" class="btn btn-success">Add To Cart</button>
+                </div>
+            </div>
+        </div>
+        
+    </form>
+
+</div>

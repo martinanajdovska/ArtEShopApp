@@ -1,0 +1,83 @@
+﻿@model ArtEShop.Domain.DTO.FilterArtPiecesDTO
+@using ArtEShop.Domain.IdentityModels
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="d-flex w-auto">
+        @if(User.IsInRole("Admin"))
+        {
+            <div class="m-3 float-start">
+                <a class="btn btn-success" style="width:200px; margin-left:28px" asp-action="Create">Insert New Product</a>
+            </div>
+        }
+    </div>
+
+    <form asp-action="Index" method="get">
+        <div class="form-actions no-color d-flex align-items-center justify-content-center">
+                <input class="mx-2 rounded-3 px-2 text-center" type="text" placeholder="Search" name="SearchString" value=@Model.SearchString>
+                <div style="position:relative;">
+                     <input type="image" src="images/search-icon.jpg" style="height:22px; position:absolute; top:-11px; left:-34px;" alt="Search"/>
+                </div>
+        </div>
+    </form>
+
+    @for (int i = 0; i < Model.ArtPieces.Count; i++)
+    {
+        var item = Model.ArtPieces[i];
+
+        @if(i%3 == 0)
+        {
+            @:<div class="row">
+        }
+
+        <div class="col-3 m-5">
+                <div class="card d-flex flex-column justify-content-between" style="width: 20rem; height: 30rem;">
+                    <img class="card-img-top align-self-center mt-4" src="/uploads/@item.Image" style="max-height: 20rem; width:auto; max-width:15rem; height:auto;" alt="Image for product!">
+                    <div class="d-flex flex-column justify-content-between">
+                        <div class="card-body pt-0">
+                           <h3 class="card-title text-center">@item.Name</h3>
+                           <h6 class="card-text text-center">Price: @item.Price EUR</h6>
+                        </div>
+                        <div class="card-footer d-flex justify-content-evenly">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="ArtPieces" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-info">Edit</a>
+
+                            @if ((bool)item.IsAvailable)
+                            {
+                                <a asp-controller="ArtPieces" asp-action="ChangeAvailable" asp-route-id="@item.Id" class="btn btn-danger">Make Unavailable</a>
+                            } else
+                            {
+                                <a asp-controller="ArtPieces" asp-action="ChangeAvailable" asp-route-id="@item.Id" class="btn btn-danger">Make Available</a>
+                            }
+                        } else
+                        {
+                            @if ((bool)item.IsAvailable)
+                            {
+                                <a asp-controller="ArtPieces" asp-action="AddArtPieceToCart" asp-route-id="@item.Id" class="btn btn-success">Add to Cart</a>
+                            } else
+                            {
+                                <p>This art is unavailable right now.</p>
+                            }
+                        }
+                       </div>
+                    </div>
+
+                    </div>
+                    
+        </div>
+
+        @if(i%3 == 2) 
+        {
+            @:</div>    
+        }
+    }
+
+</div>

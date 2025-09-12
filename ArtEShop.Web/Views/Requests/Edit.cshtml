@@ -1,0 +1,62 @@
+﻿@model ArtEShop.Domain.DTO.RequestDTO
+@using ArtEShop.Domain.IdentityModels
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h3>Edit Request</h3>
+
+<hr />
+
+<div class="container col-md-4 d-flex align-items-center justify-content-center" style="height: 470px;">
+        <img class="card-img-start mt-3 mx-5" src="/uploads/@Model.ReferenceImage" style="max-width:470px; height:auto; max-height: 470px; width:auto;" alt="Image for product!">
+
+        <form asp-action="Edit" method="post" class="d-flex-y align-self-center justify-content-center">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (User.IsInRole("Admin"))
+            {
+                <h6 class="text-center mb-3">Subject: @Model.Subject</h6>
+                <h6 class="text-center mb-3">Description: @Model.Description</h6>
+            } else
+            {
+                <div class="form-group my-2" style="width: 300px;">
+                    <label asp-for="Subject" class="control-label"></label>
+                    <input asp-for="Subject" class="form-control" />
+                    <span asp-validation-for="Subject" class="text-danger"></span>
+                </div>
+                <div class="form-group my-2">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                </div>
+            }
+            @if (User.IsInRole("Admin"))
+            {
+            <div class="form-group my-2" style="width: 300px;">
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" class="form-control"/>
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group my-2">
+                    <label asp-for="ArtistNotes" class="control-label"></label>
+                    <input asp-for="ArtistNotes" class="form-control" />
+                    <span asp-validation-for="ArtistNotes" class="text-danger"></span>
+                </div>
+            } else
+            {
+                <h6 class="text-center mb-3">Price: @Model.Price EUR</h6>
+                <h6 class="text-center mb-3">Artist Notes: @Model.ArtistNotes</h6>
+            }
+
+            <input type="hidden" asp-for="RequestId" />
+            <div class="form-group d-flex justify-content-evenly align-items-center">
+                <input type="submit" value="Save" class="btn btn-primary my-2" />
+                 <a class="btn btn-info" asp-action="Index">Back to List</a>
+            </div>
+        </form>
+    </div>
+
+
+

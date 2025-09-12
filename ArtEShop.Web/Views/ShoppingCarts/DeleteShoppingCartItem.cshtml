@@ -1,0 +1,37 @@
+﻿@model ArtEShop.Domain.DomainModels.ShoppingCartItem;
+
+<div class="container">
+    <form method="post" asp-action="DeleteShoppingCartItem">
+
+        <input type="hidden" asp-for="Id" class="form-control" />
+
+        <div class="row mt-4">
+            <div class="form-group">
+                <label asp-for="ArtPiece.Name" class="control-label"></label>
+                <input disabled="disabled" asp-for="ArtPiece.Name" class="form-control" />
+                <span asp-validation-for="ArtPiece.Name" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="form-group">
+                <label asp-for="ArtPiece.Price" class="control-label"></label>
+                <input disabled="disabled" asp-for="ArtPiece.Price" class="form-control" />
+                <span asp-validation-for="ArtPiece.Price" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="form-group">
+                <label for="Quantity" class="control-label"></label>
+                <input id="Quantity" name="Quantity" type="number" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <button type="submit" class="btn btn-success">Remove from cart</button>
+        </div>
+    </form>
+
+</div>
