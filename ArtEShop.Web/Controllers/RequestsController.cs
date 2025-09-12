@@ -39,15 +39,15 @@ namespace ArtEShop.Web.Controllers
 
             if (User.IsInRole("Admin"))
             {
-                //URL = "https://localhost:44363/api/getallrequests";
-                URL = "https://arteshopweb20250907181936-b6gaf4b3c6h7engd.canadacentral-01.azurewebsites.net/api/getallrequests";
+                URL = "https://localhost:44363/api/getallrequests";
+                //URL = "https://arteshopweb20250907181936-b6gaf4b3c6h7engd.canadacentral-01.azurewebsites.net/api/getallrequests";
 
             }
             else
             {
                 var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-                //URL = $"https://localhost:44363/api/getalluserrequests/{userEmail}";
-                URL = $"https://arteshopweb20250907181936-b6gaf4b3c6h7engd.canadacentral-01.azurewebsites.net/api/getalluserrequests/{userEmail}";
+                URL = $"https://localhost:44363/api/getalluserrequests/{userEmail}";
+                //URL = $"https://arteshopweb20250907181936-b6gaf4b3c6h7engd.canadacentral-01.azurewebsites.net/api/getalluserrequests/{userEmail}";
 
             }
 
