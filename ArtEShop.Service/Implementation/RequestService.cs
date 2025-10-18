@@ -73,6 +73,11 @@ namespace ArtEShop.Service.Implementation
         {
             Request request = GetById(requestDTO.RequestId);
 
+            if (request == null)
+            {
+                throw new Exception("Request not found");
+            }
+
             request.IsAnswered = artistUpdated;
 
             var emailMessage = new EmailMessage();
@@ -105,6 +110,10 @@ namespace ArtEShop.Service.Implementation
 
         public RequestDTO EntityToDTO(Request request)
         {
+            if (request == null)
+            {
+                throw new Exception("Request not found");
+            }
             RequestDTO model = new RequestDTO
             {
                 RequestId = request.Id,

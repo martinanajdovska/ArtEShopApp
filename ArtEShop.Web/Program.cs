@@ -38,6 +38,8 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IRequestService, RequestService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IFileService, FileService>();
+builder.Services.AddTransient<IShoppingCartItemService, ShoppingCartItemService>();
+
 
 
 

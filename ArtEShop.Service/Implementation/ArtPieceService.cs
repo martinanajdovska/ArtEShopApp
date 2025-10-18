@@ -14,14 +14,14 @@ namespace ArtEShop.Service.Implementation
     public class ArtPieceService : IArtPieceService
     {
         private readonly IRepository<ArtPiece> _artPieceRepository;
-        private readonly IRepository<ShoppingCartItem> _shoppingCartItemRepository;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly IShoppingCartItemService _shoppingCartItemService;
 
-        public ArtPieceService(IRepository<ArtPiece> artPieceRepository, IRepository<ShoppingCartItem> shoppingCartItemRepository, IShoppingCartService shoppingCartService)
+        public ArtPieceService(IRepository<ArtPiece> artPieceRepository, IShoppingCartService shoppingCartService, IShoppingCartItemService shoppingCartItemService)
         {
             _artPieceRepository = artPieceRepository;
-            _shoppingCartItemRepository = shoppingCartItemRepository;
             _shoppingCartService = shoppingCartService;
+            _shoppingCartItemService = shoppingCartItemService;
         }
 
         public void AddProductToShoppingCart(Guid id, Guid userId, int quantity)
@@ -38,8 +38,7 @@ namespace ArtEShop.Service.Implementation
                 throw new Exception("Shopping cart not found");
             }
 
-            ShoppingCartItem existingShoppingCartItem = _shoppingCartItemRepository.Get(selector: x => x,
-                predicate: x => x.ShoppingCart.Id.Equals(shoppingCart.Id) && x.ArtPiece.Id.Equals(artPiece.Id));
+            ShoppingCartItem existingShoppingCartItem = _shoppingCartItemService.GetAllByShoppingCartIdAndArtPieceId(shoppingCart.Id, artPiece.Id);
 
             if (existingShoppingCartItem == null)
             {
@@ -52,12 +51,12 @@ namespace ArtEShop.Service.Implementation
                     Order = null
                 };
 
-                _shoppingCartItemRepository.Insert(shoppingCartItem);
+                _shoppingCartItemService.Insert(shoppingCartItem);
             }
             else
             {
                 existingShoppingCartItem.Quantity += quantity;
-                _shoppingCartItemRepository.Update(existingShoppingCartItem);
+                _shoppingCartItemService.Update(existingShoppingCartItem);
             }
         }
 

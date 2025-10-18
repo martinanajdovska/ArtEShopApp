@@ -19,46 +19,73 @@ namespace ArtEShop.Service.Implementation
     public class ShoppingCartService : IShoppingCartService
     {
         private readonly IRepository<ShoppingCart> _shoppingCartRepository;
-        private readonly IRepository<ShoppingCartItem> _shoppingCartItemRepository;
         private readonly IRepository<Order> _orderRepository;
+        private readonly IShoppingCartItemService _shoppingCartItemService;
         private readonly IEmailService _emailService;
 
-        public ShoppingCartService(IRepository<ShoppingCart> shoppingCartRepository, IRepository<ShoppingCartItem> shoppingCartItemRepository, IRepository<Order> orderRepository, IEmailService emailService)
+        public ShoppingCartService(IRepository<ShoppingCart> shoppingCartRepository, IRepository<Order> orderRepository, IShoppingCartItemService shoppingCartItemService, IEmailService emailService)
         {
             _shoppingCartRepository = shoppingCartRepository;
-            _shoppingCartItemRepository = shoppingCartItemRepository;
             _orderRepository = orderRepository;
+            _shoppingCartItemService = shoppingCartItemService;
             _emailService = emailService;
         }
 
         public void DeleteItemFromShoppingCart(Guid artPieceId, Guid shoppingCartId)
         {
-            var shoppingCartItem = _shoppingCartItemRepository.Get(selector: x => x,
-                                                                             predicate: x => x.ShoppingCart.Id.Equals(shoppingCartId) && x.ArtPiece.Id.Equals(artPieceId));
+            if (artPieceId == Guid.Empty || shoppingCartId == Guid.Empty)
+            {
+                throw new Exception("Invalid art piece id");
+            }
+
+            if (shoppingCartId == Guid.Empty)
+            {
+                throw new Exception("Invalid shopping cart id");
+            }
+
+            var shoppingCartItem = _shoppingCartItemService.GetAllByShoppingCartIdAndArtPieceId(shoppingCartId,artPieceId);
 
             if (shoppingCartItem == null)
             {
                 throw new Exception("Product in shopping cart not found");
             }
 
-            _shoppingCartItemRepository.Delete(shoppingCartItem);
+            _shoppingCartItemService.Delete(shoppingCartItem);
         }
 
         public async Task<bool> PayOrder(PaymentDTO paymentDTO, Order order)
         {
+            if (paymentDTO == null)
+            {
+                throw new Exception("Payment details are missing");
+            }
+
+            if (order == null)
+            {
+                throw new Exception("Order is null");
+            }
+
             var emailMessage = new EmailMessage();
             emailMessage.MailTo = paymentDTO.Email;
 
             emailMessage.Subject = "Purchase successful";
 
+            List<ShoppingCartItem> purchasedItems = _shoppingCartItemService.GetAllByOrderId(order.Id);
+
+            if (purchasedItems.IsNullOrEmpty())
+            {
+                throw new Exception("No items found for this order");
+            }
+
             StringBuilder sb = new StringBuilder();
-            foreach (var item in order.PurchasedItems)
+            foreach (var item in purchasedItems)
             {
                 sb.Append($"You have successfully purchased {item.ArtPiece.Name} for " +
                 $"{item.ArtPiece.Price * item.Quantity} ДЕН. for a total amount of {item.Quantity}\n");
 
                 item.ShoppingCart = null;
                 item.Order = order;
+                _shoppingCartItemService.Update(item);
             }
             sb.Append($"Total price: {order.TotalPrice}");
             emailMessage.Content = sb.ToString();
@@ -75,14 +102,18 @@ namespace ArtEShop.Service.Implementation
                 throw new Exception("Shopping cart not found");
             }
 
-            List<ShoppingCartItemDTO> shoppingCartItemsDTO = _shoppingCartItemRepository.GetAll(selector: x => new ShoppingCartItemDTO
+            List<ShoppingCartItem> shoppingCartItems = _shoppingCartItemService.GetAllByShoppingCartId(shoppingCart.Id);
+            List<ShoppingCartItemDTO> shoppingCartItemsDTO = new List<ShoppingCartItemDTO>();
+
+            foreach (var item in shoppingCartItems)
             {
-                ArtPiece = x.ArtPiece,
-                Quantity = x.Quantity,
-                TotalPrice = x.Quantity * x.ArtPiece.Price
-            },
-                predicate: x => x.ShoppingCart.Id.Equals(shoppingCart.Id),
-                include: x => x.Include(z => z.ArtPiece)).ToList();
+                shoppingCartItemsDTO.Add(new ShoppingCartItemDTO
+                {
+                    ArtPiece = item.ArtPiece,
+                    Quantity = item.Quantity,
+                    TotalPrice = item.Quantity * item.ArtPiece.Price
+                });
+            }
 
             ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO();
 
