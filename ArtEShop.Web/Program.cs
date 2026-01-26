@@ -39,6 +39,7 @@ builder.Services.AddTransient<IRequestService, RequestService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IFileService, FileService>();
 builder.Services.AddTransient<IShoppingCartItemService, ShoppingCartItemService>();
+builder.Services.AddTransient<IPaymentService, PaymentService>();
 
 
 

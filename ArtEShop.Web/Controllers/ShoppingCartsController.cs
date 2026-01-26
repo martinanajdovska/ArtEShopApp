@@ -19,11 +19,13 @@ namespace ArtEShop.Web.Controllers
     {
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IOrderService _orderService;
+        private readonly IPaymentService _paymentService;
 
-        public ShoppingCartsController(IShoppingCartService shoppingCartService, IOrderService orderService)
+        public ShoppingCartsController(IShoppingCartService shoppingCartService, IOrderService orderService, IPaymentService paymentService)
         {
             _shoppingCartService = shoppingCartService;
             _orderService = orderService;
+            _paymentService = paymentService;
         }
 
         // GET: ShoppingCarts
@@ -58,12 +60,12 @@ namespace ArtEShop.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Payment(PaymentDTO paymentDTO)
+        public async Task<IActionResult> Payment(PaymentDTO paymentDTO)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Order order = _orderService.CreateOrder(paymentDTO.ArtPieceId, Guid.Parse(userId));
 
-            _shoppingCartService.PayOrder(paymentDTO, order);
+            await _paymentService.PayOrder(paymentDTO, order);
 
             return RedirectToAction(nameof(Index));
         }

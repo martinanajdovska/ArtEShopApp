@@ -13,7 +13,6 @@ namespace ArtEShop.Service.Interface
         ShoppingCart? GetByUserId(Guid userId);
         ShoppingCartDTO GetByUserIdWithIncludedProducts(Guid userId);
         void DeleteItemFromShoppingCart(Guid artPieceId, Guid shoppingCartId);
-        Task<bool> PayOrder(PaymentDTO paymentDTO, Order order);
         ShoppingCart Insert();
     }
 }

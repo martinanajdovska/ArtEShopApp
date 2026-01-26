@@ -46,7 +46,7 @@ namespace ArtEShop.Service.Implementation
                                                       include: x => x.Include(z => z.ArtPiece).Include(z => z.ShoppingCart).Include(z => z.Order));
         }
 
-        public ShoppingCartItem GetAllByShoppingCartIdAndArtPieceId(Guid shoppingCartId, Guid artPieceId)
+        public ShoppingCartItem GetByShoppingCartIdAndArtPieceId(Guid shoppingCartId, Guid artPieceId)
         {
             return _shoppingCartItemRepository.Get(selector: x => x,
                                                       predicate: x => x.ShoppingCart.Id.Equals(shoppingCartId) && x.ArtPiece.Id.Equals(artPieceId),

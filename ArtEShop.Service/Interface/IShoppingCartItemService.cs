@@ -16,6 +16,6 @@ namespace ArtEShop.Service.Interface
         ShoppingCartItem Insert(ShoppingCartItem shoppingCartItem);
         ShoppingCartItem Update(ShoppingCartItem shoppingCartItem);
         ShoppingCartItem Delete(ShoppingCartItem shoppingCartItem);
-        ShoppingCartItem GetAllByShoppingCartIdAndArtPieceId(Guid shoppingCartId, Guid artPieceId);
+        ShoppingCartItem GetByShoppingCartIdAndArtPieceId(Guid shoppingCartId, Guid artPieceId);
     }
 }

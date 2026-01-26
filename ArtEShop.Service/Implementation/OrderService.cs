@@ -55,7 +55,7 @@ namespace ArtEShop.Service.Implementation
 
             if (artPieceId != null)
             {
-                var shoppingCartItem = _shoppingCartItemService.GetAllByShoppingCartIdAndArtPieceId(shoppingCart.Id, artPieceId.Value);
+                var shoppingCartItem = _shoppingCartItemService.GetByShoppingCartIdAndArtPieceId(shoppingCart.Id, artPieceId.Value);
 
                 if (shoppingCartItem == null)
                 {

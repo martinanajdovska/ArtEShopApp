@@ -38,7 +38,7 @@ namespace ArtEShop.Service.Implementation
                 throw new Exception("Shopping cart not found");
             }
 
-            ShoppingCartItem existingShoppingCartItem = _shoppingCartItemService.GetAllByShoppingCartIdAndArtPieceId(shoppingCart.Id, artPiece.Id);
+            ShoppingCartItem existingShoppingCartItem = _shoppingCartItemService.GetByShoppingCartIdAndArtPieceId(shoppingCart.Id, artPiece.Id);
 
             if (existingShoppingCartItem == null)
             {
